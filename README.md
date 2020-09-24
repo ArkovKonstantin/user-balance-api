@@ -107,7 +107,7 @@ _Responses:_
 ---
 ### Схема
 ![Image](https://drive.google.com/uc?export=view&id=1fS9FLzwaGufeMKK48aJ_DO6MCSMRxQqb) <br>
-
+![Image](https://drive.google.com/file/d/1fS9FLzwaGufeMKK48aJ_DO6MCSMRxQqb/view?usp=sharing) <br>
 ### Сущности
 
 **User** <br>
