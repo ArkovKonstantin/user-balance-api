@@ -106,7 +106,7 @@ _Responses:_
 <a name="database">База данных</a>
 ---
 ### Схема
-![Image](https://drive.google.com/uc?export=view&id=1fS9FLzwaGufeMKK48aJ_DO6MCSMRxQqb) <br>
+![Image](https://github.com/ArkovKonstantin/user-balance-api/raw/master/assets/schema.png) <br>
 
 ### Сущности
 
