@@ -1,4 +1,4 @@
-package account
+package repository
 
 import (
 	"github.com/pkg/errors"
@@ -29,10 +29,10 @@ func (acc *account) AddBalance(userID, amount int) (user models.User, err error)
 		return user, errors.Wrap(err, "get db connection err:")
 	}
 
-	err = db.QueryRow(`insert into account (user_id, balance)
+	err = db.QueryRow(`insert into repository (user_id, balance)
 			   values ($1, $2)
-			   on conflict(user_id) do update set balance = account.balance + $2
-			   where account.user_id = $1
+			   on conflict(user_id) do update set balance = repository.balance + $2
+			   where repository.user_id = $1
 			   returning balance;`, userID, amount).Scan(&user.Balance)
 	if err != nil {
 		log.Println(errors.Wrap(err, "add balance, db operation err"))
@@ -49,10 +49,10 @@ func (acc *account) SubBalance(userID, amount int) (user models.User, err error)
 		return user, errors.Wrap(err, "get db connection err:")
 	}
 
-	err = db.QueryRow(`insert into account (user_id, balance)
+	err = db.QueryRow(`insert into repository (user_id, balance)
 			   values ($1, 0)
-			   on conflict(user_id) do update set balance = account.balance - $2
-			   where account.user_id = $1
+			   on conflict(user_id) do update set balance = repository.balance - $2
+			   where repository.user_id = $1
 			   returning balance;`, userID, amount).Scan(&user.Balance)
 
 	if err != nil {
@@ -76,20 +76,20 @@ func (acc *account) Transfer(senderID, recipientID, amount int) (sender, recipie
 		return sender, recipient, errors.Wrap(err, "begin tx err:")
 	}
 
-	err = db.QueryRow(`insert into account (user_id, balance)
+	err = db.QueryRow(`insert into repository (user_id, balance)
 			   values ($1, 0)
-			   on conflict(user_id) do update set balance = account.balance - $2
-			   where account.user_id = $1
+			   on conflict(user_id) do update set balance = repository.balance - $2
+			   where repository.user_id = $1
 			   returning balance;`, senderID, amount).Scan(&sender.Balance)
 	if err != nil {
 		tx.Rollback()
 		return
 	}
 
-	err = db.QueryRow(`insert into account (user_id, balance)
+	err = db.QueryRow(`insert into repository (user_id, balance)
 			   values ($1, $2)
-			   on conflict(user_id) do update set balance = account.balance + $2
-			   where account.user_id = $1
+			   on conflict(user_id) do update set balance = repository.balance + $2
+			   where repository.user_id = $1
 			   returning balance;`, recipientID, amount).Scan(&recipient.Balance)
 	if err != nil {
 		tx.Rollback()
@@ -106,7 +106,7 @@ func (acc *account) GetBalance(userID int) (user models.User, err error) {
 		return user, errors.Wrap(err, "get db connection err:")
 	}
 
-	err = db.QueryRow(`select user_id, balance from account where user_id = $1`, userID).Scan(&user.ID, &user.Balance)
+	err = db.QueryRow(`select user_id, balance from repository where user_id = $1`, userID).Scan(&user.ID, &user.Balance)
 	if err != nil {
 		return
 	}
