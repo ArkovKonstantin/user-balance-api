@@ -1,0 +1,22 @@
+version: "3.3"
+
+services:
+  postgres:
+    image: postgres:alpine
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    restart: "always"
+    environment:
+      POSTGRES_DB: "balance"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "12345"
+  web:
+    build: .
+    environment:
+      ENV: "prod"
+    command: ./main
+    restart: always
+    depends_on:
+      - postgres
+    ports:
+      - 9000:9000
