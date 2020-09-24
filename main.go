@@ -11,11 +11,9 @@ var (
 )
 
 func init() {
-	err := models.LoadConfig(&config)
-	if err != nil {
-		log.Fatal(err)
-	}
+
 }
+
 func main() {
 	p := provider.New(&config.SQLDataBase)
 	err := p.Open()
