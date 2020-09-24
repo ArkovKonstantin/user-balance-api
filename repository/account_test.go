@@ -68,7 +68,20 @@ func TestAccount_AddSubBalance(t *testing.T) {
 	}
 }
 
-func TestAccount_CheckPositiveBalance(t *testing.T) {
+func TestAccount_InvalidUser(t *testing.T){
+	amount := 1
+	userID := -1
+	rep := NewAccountRepository(p)
+	_ , err := rep.AddBalance(userID, amount)
+	if err, ok := err.(*pq.Error); ok {
+		t.Log(err.Code.Name())
+		if err.Code.Name() != "foreign_key_violation" {
+			t.Fatal(err)
+		}
+	}
+}
+
+func TestAccount_PositiveBalance(t *testing.T) {
 	amount := 1
 	rep := NewAccountRepository(p)
 	user, err := rep.AddBalance(1, amount) // + 1
@@ -78,8 +91,9 @@ func TestAccount_CheckPositiveBalance(t *testing.T) {
 
 	_, err = rep.SubBalance(user.ID, user.Balance+amount) // new_balance = balance - (balance + amount)
 	if err, ok := err.(*pq.Error); ok {
-		if err.Code.Name() != "violation_check" {
-			t.Fatal(err, "db must check balance on the negativity")
+		t.Log(err.Code.Name())
+		if err.Code.Name() != "check_violation" {
+			t.Fatal(err)
 		}
 	}
 }

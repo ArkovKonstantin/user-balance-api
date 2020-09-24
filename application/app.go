@@ -10,7 +10,7 @@ import (
 
 type Application struct {
 	servicePort int
-	r      *mux.Router
+	r           *mux.Router
 	rep         repository.Account
 }
 
@@ -23,4 +23,3 @@ func (app *Application) Start() {
 	fmt.Printf("start and listening on :%d ...\n", app.servicePort)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(`:%d`, app.servicePort), app.r))
 }
-
